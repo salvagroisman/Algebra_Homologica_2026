@@ -1,0 +1,1114 @@
+\documentclass{article}
+\usepackage[spanish]{babel}
+\usepackage{fancyhdr}
+\usepackage{hyperref}
+\hypersetup{
+    pdfborder={0 0 0}
+}
+\usepackage{tikz}
+\usetikzlibrary{babel}
+\usetikzlibrary{arrows.meta}
+\usepackage{tikz-cd}
+\usepackage{pgfplots}
+\pgfplotsset{compat=1.18}
+
+\usepackage{amssymb, amsmath, amsbsy, amsfonts,amsthm}
+\usepackage{dsfont}
+\usepackage{bbm}
+
+\newcommand{\nat}{\ensuremath{\mathbb{N}}}
+\newcommand{\ent}{\ensuremath{\mathds{Z}}}
+\newcommand{\float}{\ensuremath{\mathds{R}}}
+\newcommand{\complex}{\ensuremath{\mathds{C}}}
+\newcommand{\Q}{\ensuremath{\mathbb{Q}}}
+\newcommand{\N}{\ensuremath{\mathbb{N}}}
+\newcommand{\Z}{\ensuremath{\mathds{Z}}}
+\newcommand{\R}{\ensuremath{\mathds{R}}}
+\newcommand{\C}{\ensuremath{\mathds{C}}}
+
+
+\newcommand{\conjunto}[1]{\ensuremath{\{#1\}}}
+\newcommand{\sucesion}[1]{(#1_n)_{n \in \mathbb{N}}}
+\newcommand{\hasta}[1]{[\![#1]\!]}
+\newcommand{\fungen}[2][0]{\sum_{n \geq #1} #2 \, X^n}
+\newcommand{\funexp}[2][0]{\sum_{n \geq #1} #2 \,\frac{1}{n!} X^n}
+\newcommand{\funexpf}[3][0]{\sum_{n \geq #1} #2 \,#3\, X^n}
+\newcommand{\stirling}[2]{\genfrac{\{}{\}}{0pt}{}{#1}{#2}}
+\newcommand{\prodint}[1]{\langle #1\rangle}
+\newcommand{\norma}[1]{\| #1 \| }
+\newcommand{\cuerpo}{\mathbb{K}}
+\newcommand{\red}[1]{(#1_\alpha)_{\alpha \in\Lambda}}
+
+\newcommand{\secuencia}[1]{\{ #1_n \}}
+\newcommand{\flia}[1]{\{ #1_i\}_{i \in I}}
+
+
+
+
+\theoremstyle{plain}
+\newtheorem{theorem}{Teorema}[section]
+\newtheorem{lemma}[theorem]{Lema} 
+\newtheorem{proposicion}[theorem]{Proposición}
+\newtheorem{corollary}[theorem]{Corolario}
+
+\theoremstyle{definition}
+\newtheorem{definition}[theorem]{Definición}
+\newtheorem{ejemplo}[theorem]{Ejemplo}
+\newtheorem{proposition}[theorem]{Proposición}
+
+\theoremstyle{remark}
+\newtheorem*{nota}{Nota}
+\newtheorem*{observacion}{Observacion}
+\newtheorem{axioma}{Axioma}
+\newtheorem{ejercicio}{Ejercicio}[section]
+
+\title{Álgebra Homológica}
+\author{Salvador Groisman}
+\date{2026}
+
+\begin{document}
+
+\pagestyle{fancy}
+\fancyhf{} 
+\fancyhead[L]{\textbf{Álgebra Homológica}} 
+\fancyhead[R]{\textbf{Groisman Salvador}}
+\fancyfoot[C]{\thepage}
+
+\maketitle
+
+\newpage
+
+\tableofcontents
+
+\newpage
+
+\section{Estimaciones categóricas}
+
+\subsection{Categorías}
+
+\begin{definition}
+    Una \textit{categoría} es $C$ es una entidad matemática que consta de objetos -a los que notaremos $C_0$ u $Obj(C)$- y para todo par de objetos $A,B$ en $C$, un conjunto de morfismos de $A$ en$B$. Notamos a estos morfismo $C(A,B)$ o bien $Hom_C(A,B)$. \\
+
+    Pedimos además que si $A\neq A^\prime$ o $B \neq B^\prime$ entonces $Hom_C(A,B)$ y $Hom_C(A^\prime,B^\prime)$ sean disjuntos y que si $A,B,C$ son objetos de $C$ entonces exista una aplicación:
+
+    \begin{equation*}
+        (f,g) \in Hom_C(B,C) \times Hom_C(A,B) \mapsto f \circ g Hom_C(A,B)
+    \end{equation*} 
+
+    Para todo objeto $A$ exista $Id_A \in Hom_C(A,A)$. Y por último pedimos que la composición de morfismos sea asociativa. \\
+
+    Dados dos objetos $A,B$ en $C_0$ decimos que son \textit{isomorfos} si existen $f \in Hom_C(A,B)$ y $g \in Hom_C(B,A)$ tales que $f \circ g = Id_B, g \circ f = Id_A$.
+\end{definition}
+
+Algunos ejemplos de categorías son:
+
+\begin{enumerate}
+    \item $C = Sets$ con $Hom_C(A,B) = \conjunto{f:A \to B| f \text{ es función }}$.
+
+    \item $\cuerpo$ cuerpo y $C = Vect_{\cuerpo}$ entonceslos morfismos entre dos espaciosvectoriales son las transformaciones lineales.
+    
+    \item Si $C = Top$ entonces los morfismos son las funciones continuas.
+    
+    \item Si $C = Gr$ la categoría degrupos, nuestrs morfismos son morfismos de grupos.
+
+    \item Si $A$ es anillo y $C = A-Mod$ a izquierda tenemos los morfismos de $A$ módulos.
+    
+    \item Si $C = Ab$ tenemos la categoría de grupos abelianos con morfismos de grupos.
+
+    \item Si $C = Ann_1$ los anillos con unidad, nuestros morfismos son de anillo con unidad.
+
+    \item En general $C = Ann$ son morfismos de anillos.
+    
+    \item Si $G$ es un grupo y consideramos $Obj(C_G) = \conjunto{*}$ para cada elemento del grupo podemos considerar un morfismo e identificar la composición con el producto del grupo. En ese caso nuestro $Hom_{C_G}(*,*)$ es isomorfo a $G$. En este caso además todo morfismo es inversible.
+
+    \item Podemos considerar $(A,\leq)$ un poset y $Obj(C) = A$. En este caso nuestros morfismos son:
+
+    \begin{equation*}
+        Hom_{C}(x,y) =
+        \begin{cases}
+            \emptyset \text{ si x e y no son comparables.} \\
+            x \to y \text{ si } x\leq y
+        \end{cases}
+    \end{equation*}
+
+    Por ejemplo si $\conjunto{1,2,3,4}$ es nuestro poset con $1 \leq 2, 1 \leq 3, 3 \leq 4$ obtenemos:
+
+\begin{center}
+    \begin{tikzpicture}
+        \node (1) at (0,0) {$1$};
+        \node (2) at (1,-0.5) {$2$};
+        \node (3) at (1,0.5) {$3$};
+        \node (4) at (4,0) {$4$};
+
+    \draw[->] (1) -- (2);
+    \draw[->] (1) -- (3);
+    \draw[->] (3) -- (4);
+    \end{tikzpicture}
+\end{center}
+
+\end{enumerate}
+
+Nos interesaremos especialmente en lo que llamaremos categorías localmente pequeñas:
+
+\begin{definition}
+    Una categoría se dice \textit{pequeña} si sus objetos forman un conjunto. \\
+
+    Decimos que una categoría es \textit{localmente pequeña} si para todo par de objetos, los homomorfismos de uno en otro forman un conjunto.
+\end{definition}
+
+Como es usual, dada una estructura, podemos definir una sub-estructura:
+
+\begin{definition}
+    Sea $\mathcal{C}$ una categoría , decimos que $\mathcal{D}$ es un \textit{sub-categoría} si: todo objeto de $\mathcal{D}$ es objeto de $\mathcal{C}$; y para todo par de objetos $X,Y$ en $\mathcal{D}$ todo morfismo de $X$ en $Y$ en $\mathcal{D}$ es un morfismo de $X$ en $Y$ en $\mathcal{C}$. 
+\end{definition}
+
+Por ejemplo los anillos con unidad resultan una sub-categoría de los anillos. Notemos además que la condición sobre los morfismos es más restrictiva, ya que a los morfismos de $Ann_1$ le pedimos preservar unidades; cosa que en morfismos de anillos en general no es requerida. \\
+
+\begin{definition}
+    Dada $\mathcal{D}$ una sub-categoría de la categoría $\mathcal{C}$, decimos que es \textit{plena} si preserva todos los morfismos. Haciendo abuso de notación si:
+
+    \begin{equation*}
+        Hom_{\mathcal{D}}(X,Y) = Hom_{\mathcal{C}}(X,Y) 
+    \end{equation*}
+\end{definition}
+
+Con el ejemplo de $Ann_1$ tenemos un ejemplo de categoría no plena. Un ejemplo de categoría plena es la categoría de grupos abelianos como sub-categoría de la de grupos. \\
+
+Otra observación importante es que, si los objetos y morfismos de nuestra categoría fuesen conjuntos, entonces ''ser isomorfo a'' resulta una relación de equivalencia. Por ejemplo si consideramos la categoría de los $\mathbb{K}$-Espacios Vectoriales finitos, esta relación particiona el conjunto de objetos por dimensión. \\
+
+Nos encontramos entonces con un problema. Si nuestra categoría y morfismos no tiene por qué ser un conjunto ¿Cómo definimos las nociones de inyectividad y suryectividad?
+
+\begin{definition}
+    Sean $A,B$ objetos de una categoría $\mathcal{C}$, dada $f:A \to B$ un morfismo, decimos que:
+
+    \begin{enumerate}
+        \item $f$ es un \textit{monomorfismo} si para todo objeto $C$ y todo par de morfismos $g,h:C \to A$ tales que $f \circ g =f \circ h$ resulta $g = h$. A esto lo conocemos como la \textit{propiedad de cancelación a izquierda}.
+
+        \item $f$ se dice \textit{epmorfismo} si cancela a derecha. Es decir $g \circ f = h \circ f \implies g = h$.
+    \end{enumerate}
+\end{definition}
+
+Una observación importante es que la condición de ser epimorfismo es más debil que ser suryectiva como función de conjuntos. Es decir, si pensamos esto como un morfismo de alguna estructura conocida, de alguna manera queremos decir que la imagen de $f$ debe abarcar lo suficiente para condicionar todo morfismo que sale de su codominio.  \\
+
+Conocido es el ejemplo de la inclusión de $\mathbb{Z}$ en $\mathbb{Q}$. Más aún, este ejemplo resulta especial; pues se trata de una función que es epimorfismo y monomorfismo pero \textit{no} un isomorfismo, y a la vez de un epimorfismo que no es sobreyectivo. \\
+
+Otro ejemplo interesante es que, la proyección:
+
+\begin{equation*}
+    \pi: \mathbb{Q} \to \frac{\Q}{\Z}
+\end{equation*}
+
+Es un monomorfismo que no resulta inyectivo en la categoría de grupos de división. Claramente no es inyectivo, pues todo entero cae en la clase del $0$. \\
+
+Para ver que es un monomorfismo recordemos primero que un grupo $D$ sea de división significa que para todo $x \in D$ y todo entero $n \in \nat$ existe $y_n$ tal que $n \cdot y_n = x$. \\
+
+Sean entonces $h,g:D \to \Q$ dos morfismos tales que $\pi \circ g = \pi \circ h$ y sea $c$ en $C$ entonces:
+
+\begin{equation*}
+    \pi \circ g(c) = \pi \circ h (c) \iff g(c) = h(c) + z \iff g(c) - h(c) = z \quad (z \in \ent)
+\end{equation*}
+
+Como el grupo es de división para ese $c$ y para cada $n \in \nat$ existe $y_n$ tal que $ny_n = c$, de manera que:
+
+\begin{equation*}
+   z = g(c) - h(c) = n(g(y_n) - h(y_n)) 
+\end{equation*}
+
+
+Como $g(y_n) - h(y_n) \in \mathbb{Z}$, tenemos que $\frac{z}{n} \in \Z$. Como esto es para cada $n$ tenemos que $z$ es un entero divisible por todo entero, de modo que $z = 0$. Y como esto es sin importar $c$ tenemos que $g \equiv h$ como se quería probar. Obtuvimos así un monomorfismo que no resulta inyectivo. \\
+
+Por último, dada una categoría podemos definir su categoría opuesta:
+
+\begin{definition}
+    Sea $\mathcal{C}$ una categoría, definimos $\mathcal{C}^{op}$ tal que:
+
+    \begin{equation*}
+        \mathcal{C}_0^{op} = \mathcal{C}_0
+    \end{equation*}
+
+    Y
+
+    \begin{equation*}
+        Hom_{\mathcal{C}^{op}}(X,Y) = Hom_{\mathcal{C}}(Y,X)
+    \end{equation*}
+
+    para todo par $X,Y$ de objetos.
+\end{definition}
+
+\subsection{Funtores}
+
+\begin{definition}
+    Sean $\mathcal{C}$ y $\mathcal{D}$ dos categorías, un \textit{funtor covariante} $F: \mathcal{C}  \to \mathcal{D}$ es una aplicación que asigna a cada objeto de $\mathcal{C}$ uno de $\mathcal{D}$ y tal que para todo par de objetos $X,Y$ en $\mathcal{C}$ y cada morfismo $f$ en $Hom_{\mathcal{C}}(X,Y)$ existe un morfismo $F(f)$ en $Hom_{\mathcal{D}}(F(X),F(Y))$. \\
+
+    Además $F(Id_{X}) = Id_{F(X)}$ para todo $X$ objeto y $F(g \circ f) = F(g) \circ F(f)$ para todos dos morfismos cuales su composición tenga sentido.
+\end{definition}
+
+Algunos ejemplos elementales de funtores son:
+
+\begin{ejemplo}
+    \begin{enumerate}
+        \item El \textit{funtor olvido:} Dada una categoría $\mathcal{C}$ donde los objetos sean conjuntos y los morfismos funciones, podes considerar:
+
+        \begin{align*}
+              \mathcal{O}: & \mathcal{C} \longrightarrow Sets \\
+              & X \longmapsto X \\
+              & f \longmapsto f
+        \end{align*}
+
+        Es decir, nos olvidamos de la estrutura del objeto y de la estructura del morfismo. 
+
+        \item Dada $Gr$ la categoría de grupos y $Ab$ la categoría de grupos abelianos, el abelianizador es el funtor:
+
+        \begin{align*}
+              \mathcal{F}: & Gr \longrightarrow Ab \\
+              & G \longmapsto \frac{G}{[G,G]} \\
+              & f \longmapsto \pi \circ f
+        \end{align*}
+
+        Notemos que proyectar la identidad nos da la identidad en el cociente y que:
+
+        \begin{equation*}
+            F(g \circ h) = F(g) \circ F(h)
+        \end{equation*}
+
+        Esto último pues si $h:G_1\to G_2$ y $g:G_2 \to G_3$ entonces sea $x \in G_1$ tenemos que:
+
+        \begin{align*}
+            F(g \circ h)(x[G_1,G_1]) &= (g \circ h)(x) [G_3, G_3] = g(h(x)) [G_3, G_3] \\
+            &= F(g)\big(h(x) [G_2, G_2]\big) = F(g)\big(F(h)(x[G_1,G_1])\big) \\
+            &= (F(g) \circ F(h))(x[G_1,G_1])
+        \end{align*}
+
+
+    \end{enumerate}
+\end{ejemplo}
+
+Un eje,plo un poco más interesante es el siguiente:
+
+\begin{ejemplo}
+    Una $\mathbb{K}$-ÁLgebra de Lie es un $\mathbb{K}$-Espacio Vectorial $(L,+,\cdot)$ dotado de una operación:
+
+    \begin{align*}
+        [-,-]:L \times L \longrightarrow L
+    \end{align*}
+
+    Que es bilineal, antisimétrica -$[x,y] = -[y,x]$- y respeta la siguiente identidad:
+
+    \begin{equation*}
+        [[x,y],z] - [x,[y,z]] + [[z,x],y] = 0
+    \end{equation*}
+
+    conocida como la \textit{identidad de Jacobi}. \\
+
+    Un morfismo entre estas álgebras es un morfismo de álgebras que respeta la identida de Jacobi. \\
+
+    Sea $L$ un álgebra de Lie, podemos considerar su álgebra envolvente definida por:
+
+    \begin{equation*}
+        U(L) = \frac{T_{\mathbb{K}}(L)}{\sim}
+    \end{equation*}
+
+    donde:
+
+    \begin{equation*}
+        T_{\mathbb{K}}(L) = \bigoplus_{n \geq 0} L^{\otimes n}
+    \end{equation*}
+
+    como espacio vectorial. En eset lugar definimos el producto $x * y$ como la concatenación de sus productos tensoriales, es decir:
+
+    \begin{equation*}
+        x * y = (x_1 \otimes \dots \otimes x_r) * (y_1 \otimes \dots \otimes y_r) = x_1 \otimes \dots \otimes x_r \otimes y_1 \otimes \dots \otimes y_r \in L^{\otimes (r+s)}
+    \end{equation*}
+
+    Y se extiende linealmente para tensores no elementales. Este producto no es conmutativo pero si asociativo de modo que $(T_{\mathbb{K}}(L), +, *)$ resulta un álgebra asociativa. \\
+
+    Por otro lado, la relación $\sim$ es:
+    
+    \begin{equation*}
+        \prodint{x \otimes y  - y \otimes x - [x,y]}
+    \end{equation*}
+
+    Esto nos da un funtor pues cada morfismo $\phi:L_1 \to L_2$ entre álgebras de Lie induce un morfismo en $T_\cuerpo(L)$ y este pasa al cociente dandonos $U(\phi): U(L_1) \to U(L_2)$. Resta verificar que este morfismo respeta composiciones e identidades. \\
+
+    Veamos primero la identidad. Sea $id_L: L \to L$. A nivel del álgebra tensorial, el morfismo inducido $T(id_L)$ actúa sobre los tensores elementales como:
+
+        \begin{equation*}
+            T(id_L)(x_1 \otimes \dots \otimes x_n) = id_L(x_1) \otimes \dots \otimes id_L(x_n) = x_1 \otimes \dots \otimes x_n
+        \end{equation*}
+        Es decir, $T(id_L) = id_{T(L)}$. Al proyectar al cociente, es inmediato que $U(id_L) = id_{U(L)}$. \\
+
+        Para la composición, tomemos dos morfismos de álgebras de Lie $\phi: L_1 \to L_2$ y $\psi: L_2 \to L_3$. Evaluamos en la clase de un tensor elemental $\overline{x_1 \otimes \dots \otimes x_n} \in U(L_1)$:
+        \begin{align*}
+            U(\psi \circ \phi)\left(\overline{x_1 \otimes \dots \otimes x_n}\right) &= \overline{(\psi \circ \phi)(x_1) \otimes \dots \otimes (\psi \circ \phi)(x_n)} \\
+            &= \overline{\psi(\phi(x_1)) \otimes \dots \otimes \psi(\phi(x_n))} \\
+            &= U(\psi)\left( \overline{\phi(x_1) \otimes \dots \otimes \phi(x_n)} \right) \\
+            &= U(\psi) \Big( U(\phi)\left(\overline{x_1 \otimes \dots \otimes x_n}\right) \Big) \\
+            &= (U(\psi) \circ U(\phi))\left(\overline{x_1 \otimes \dots \otimes x_n}\right)
+        \end{align*}
+        Como los tensores elementales generan $U(L_1)$, por linealidad concluimos que $U(\psi \circ \phi) = U(\psi) \circ U(\phi)$. Por lo tanto, $U$ es efectivamente un funtor. \\
+
+        Y este ejemplo no termino, pues podemos considerar un funtor en algún sentido ''inverso'' al que dimos. Sea la aplicación:
+        
+        \begin{align*}
+            R: & Asoc_{\cuerpo} \longrightarrow Lie_\cuerpo \\
+            & R(A) \longmapsto A 
+        \end{align*}
+
+        como espacios vectoriales. Dados $a,b \in A$ definimos $[a,b] = ab-ba$ que es claramente bilineal -sacando factor común a derecha o izquierda según corresponda-, cumple que $[a,b] = -[b,a]$ y cumple la identidad de Jacobi:
+
+        \begin{align*}
+            & [[a,b],c] - [a,[b,c]] + [[c,a],b] \\
+            &= [ab-ba, c] - [a, bc-cb] + [ca-ac, b] \\
+            &= (ab-ba)c - c(ab-ba) - \big(a(bc-cb) - (bc-cb)a\big) + (ca-ac)b - b(ca-ac) \\
+            &= abc - bac - cab + cba - abc + acb + bca - cba + cab - acb - bca + bac \\
+            &= (abc - abc) + (bac - bac) + (cab - cab) + (cba - cba) + (acb - acb) + (bca - bca) \\
+            &= 0
+        \end{align*}
+
+        Para completar la definición del funtor $R$, debemos ver qué hace sobre los morfismos. Si $f: A \to B$ es un morfismo de álgebras asociativas, definimos $R(f) = f$ como transformación lineal. Veamos que efectivamente resulta un morfismo de álgebras de Lie:
+        
+        \begin{align*}
+            R(f)([a,b]) &= f(ab - ba) \\
+            &= f(ab) - f(ba) \\
+            &= f(a)f(b) - f(b)f(a) \\
+            &= [f(a), f(b)] \\
+            &= [R(f)(a), R(f)(b)]
+        \end{align*}
+
+        Como $R$ manda la identidad a la identidad y la composición a la composición (pues a nivel de funciones no estamos haciendo nada, $R(f)=f$), concluimos que $R$ es un funtor. \\
+
+        Sin  embargo $R(U(L)) \neq L$, notemos que $R(U(L))$ es mucho mayor que $L$. Pero si tenemos la aplicacion:
+        
+        \begin{align*}
+            & L \longrightarrow R(U(L)) \\
+            & x \mapsto U(x)_1
+        \end{align*}
+
+        Donde $U(x)_1$ es el primer grado en el álgebra envolvente.
+\end{ejemplo}
+
+\begin{definition}
+    Decimos qe un funtor $F$ preserva epimorfismos o es \textit{exacto a derecha} si para toda sucesión:
+
+    \begin{equation*}
+        X \xrightarrow{f} Y \xrightarrow{g} Z \longrightarrow 0
+    \end{equation*}
+
+    exacta, tenemos que:
+
+    \begin{equation*}
+        F(X) \xrightarrow{F(f)} F(Y) \xrightarrow{F(g)} F(Z) \longrightarrow 0
+    \end{equation*}
+
+    es exacta.
+\end{definition}
+
+Un ejemplo de funtor exacto a derecha es el siguiente:
+
+\begin{ejemplo}
+    Sean $A,B$ anillos con unidad y $Q$ un $BA$-bimódulo, consideremos:
+
+    \begin{align*}
+        F: & {}_A Mod \longrightarrow {}_B Mod \\
+        & X \longmapsto Q \otimes_A X \\
+        & f \longmapsto Id_Q \otimes_A f  
+    \end{align*}
+
+    Veamos primero que $F(f) = id_Q \otimes_A f$ resulta un morfismo de $B$-módulos.  \\
+
+        Sabemos que $id_Q \otimes_A f: Q \otimes_A X \to Q \otimes_A Y$ es un morfismo de grupos abelianos. Resta ver que preserva la acción de $B$. Evaluando en tensores elementales $q \otimes x$ y tomando $b \in B$:
+
+        \begin{align*}
+            F(f)\big(b \cdot (q \otimes x)\big) &= (id_Q \otimes_A f) \big( (bq) \otimes x \big) \\
+            &= (bq) \otimes f(x) \\
+            &= b \cdot \big( q \otimes f(x) \big) \\
+            &= b \cdot F(f)(q \otimes x)
+        \end{align*}
+
+        Como los tensores elementales generan $Q \otimes_A X$, por extensión lineal deducimos que $F(f)$ es un morfismo de $B$-módulos. \\
+
+        Para ver que $F$ es un funtor, verifiquemos la identidad y la composición:
+        \begin{itemize}
+            \item $F(id_X) = id_Q \otimes_A id_X = id_{Q \otimes_A X} = id_{F(X)}$.
+            \item Sean $f: X \to Y$ y $g: Y \to Z$ morfismos en ${}_A Mod$. Evaluando en un tensor elemental:
+            \begin{align*}
+                F(g \circ f)(q \otimes x) &= (id_Q \otimes_A (g \circ f))(q \otimes x) = q \otimes g(f(x)) \\
+                &= (id_Q \otimes_A g)\big( q \otimes f(x) \big) = (id_Q \otimes_A g) \Big( (id_Q \otimes_A f)(q \otimes x) \Big) \\
+                &= \big( F(g) \circ F(f) \big)(q \otimes x)
+            \end{align*}
+            Por lo tanto, $F(g \circ f) = F(g) \circ F(f)$, haciendo de $F$ un funtor.
+        \end{itemize}
+
+        Finalmente, probemos que $F$ es exacto a derecha. Sea una sucesión exacta de $A$-módulos a izquierda:
+        \begin{equation*}
+            X \xrightarrow{f} Y \xrightarrow{g} Z \longrightarrow 0
+        \end{equation*}
+        Queremos ver que la siguiente sucesión de $B$-módulos es exacta:
+        \begin{equation*}
+            Q \otimes_A X \xrightarrow{id \otimes f} Q \otimes_A Y \xrightarrow{id \otimes g} Q \otimes_A Z \longrightarrow 0
+        \end{equation*}
+        
+        Dado un generador $q \otimes z \in Q \otimes_A Z$, como $g$ es sobreyectiva, existe $y \in Y$ tal que $g(y) = z$. Luego, $(id \otimes g)(q \otimes y) = q \otimes g(y) = q \otimes z$. Por lo tanto $id \otimes g$ es sobreyectiva. \\
+
+        Como:
+
+        \begin{equation*}
+            (id \otimes g) \circ (id \otimes f) = id \otimes (g \circ f) = id \otimes 0 = 0
+        \end{equation*}
+
+        entonces $Im(id \otimes f) \subseteq \ker(id \otimes g)$. \\
+
+        Como $id \otimes g$ es suyectvo, al pasar al cociente:
+        \begin{align*}
+            \overline{id \otimes g}: \frac{Q \otimes_A Y}{Im(id \otimes f)} &\longrightarrow Q \otimes_A Z \\
+            \overline{q \otimes y} &\longmapsto q \otimes g(y)
+        \end{align*}
+        Si probamos que $\overline{id \otimes g}$ es un isomorfismo, entonces el núcleo de $id \otimes g$ coincide exactamente con $Im(id \otimes f)$. Para esto, construiremos su inversa.  \\
+
+        Definamos una aplicación $\varphi: Q \times Z \to \frac{Q \otimes_A Y}{Im(id \otimes f)}$. Dado $(q,z)$, elegimos $y \in Y$ tal que $g(y)=z$ y definimos:
+
+        \begin{equation*}
+            \varphi(q,z) = \overline{q \otimes y}
+        \end{equation*}
+        Veamos que está bien definida: Si $g(y_1) = z = g(y_2)$, entonces $g(y_1 - y_2) = 0$, es decir $y_1 - y_2 \in \ker(g) = Im(f)$. Por lo tanto existe $x \in X$ tal que $f(x) = y_1 - y_2$. Luego:
+        \begin{equation*}
+            q \otimes y_1 - q \otimes y_2 = q \otimes f(x) = (id \otimes f)(q \otimes x) \in Im(id \otimes f)
+        \end{equation*}
+
+        Por lo que $\overline{q \otimes y_1} = \overline{q \otimes y_2}$. Es fácil verificar que $\varphi$ es $B$-lineal a izquierda, aditiva y balanceada sobre $A$, por lo que induce un morfismo de $B$-módulos desde el producto tensorial:
+
+        \begin{align*}
+            \Phi: Q \otimes_A Z &\longrightarrow \frac{Q \otimes_A Y}{Im(id \otimes f)} \\
+            q \otimes z &\longmapsto \overline{q \otimes y}
+        \end{align*}
+        Resulta evidente que $\Phi$ y $\overline{id \otimes g}$ son inversas mutuamente evaluando en los tensores elementales. Como $\overline{id \otimes g}$ es un isomorfismo, deducimos la exactitud requerida.
+\end{ejemplo}
+
+\begin{ejemplo}
+    Sea $M$ un $AB$-bimódulo y:
+
+    \begin{align*}
+        G: & {}_AMod \longrightarrow {}_B Mod \\
+        & N \mapsto Hom_A({}_AM_B,{}_AN) \\
+    \end{align*}
+
+    Resulta un funtor entre categorías de módulos a izquierad con:
+
+    \begin{align*}
+        G(\phi):  &G(N_1) \longrightarrow G(N_2) \\
+        &Hom_A(M,N_1) \to Hom_A(M,N_2) \\
+         & \quad \alpha \longmapsto \phi \circ\alpha
+    \end{align*}
+
+    Se suele notar a este funtor $G(\phi) = \phi^*$. Es claro que $G(Id_N)$ nos da la identidad $Id_{G(N)}$ pues estamos considerando la aplicación que a todo morfismo lo compone con la identidad. \\
+
+    Por otro lado, si $\phi:N_2 \to N_3$ y $\psi: N_1 \to N_2$ entonces:
+
+    \begin{equation*}
+        G(\phi \circ \psi)(\alpha) = (\phi \circ\psi) \circ \alpha = (G(\phi) \circ G(\psi))(\alpha)
+    \end{equation*}
+
+    De modo que se trat de un funtor.
+
+\end{ejemplo}
+
+Más adelante veremos como se relacionan estos dos funtores. \\
+
+\begin{definition}
+    Un funtor entre categorias $\mathcal{C}, \mathcal{D}$ localmente pequeñas se dice \textit{fiel} si:
+
+    \begin{align*}
+         Hom_{\mathcal{C}}(A,B) & \to Hom_{\mathcal{D}}(F(A),F(B)) \\
+        & f \longmapsto F(f)
+    \end{align*}
+
+    es una aplicación inyectiva. Decimos que el funtor es \textit{pleno} si la aplicación es sobreyectiva.
+\end{definition}
+
+
+Algunos ejemplos:
+
+\begin{enumerate}
+   \item \textit{Fiel y no pleno:} El funtor olvido $\mathcal{O}: {}_A Mod \longrightarrow \mathbb{K}\text{-Vect}$ (siendo $A$ una $\mathbb{K}$-álgebra). Es fiel porque si dos morfismos de $A$-módulos coinciden como transformaciones lineales, son trivialmente el mismo morfismo. No es pleno porque existen muchas transformaciones lineales entre módulos que no respetan la acción de $A$.
+
+   \item \textit{Pleno y no fiel:} Un epimorfismo de grupos $\pi: G \longrightarrow G/N$ con núcleo no trivial, pensando a ambos grupos como categorías de un solo objeto (donde los elementos del grupo son las flechas y la operación es la composición). \\
+
+    Es pleno porque la proyección es sobreyectiva: toda flecha en el cociente proviene de al menos una flecha de $G$. No es fiel porque, al tener núcleo no trivial, elementos distintos de $G$ (flechas distintas) colapsan en la misma clase de equivalencia (misma flecha en la categoría de llegada).
+
+
+    \item \textit{Plenamente fiel:} El funtor inclusión de cualquier subcategoría. Por ejemplo, la inclusión $I: Ab \hookrightarrow Gr$. Es fiel porque la inclusión de funciones es inyectiva. Es pleno porque no se ''pierden'' flechas: todo morfismo de grupos entre dos grupos que resultan ser abelianos es, en sí mismo, un morfismo en $Ab$.
+
+    \item \textit{Ni fiel ni pleno:} El funtor abelianizador $F: Gr \longrightarrow Ab$, dado por $G \longmapsto G/[G,G]$.
+    \begin{itemize}
+        \item \textbf{No es fiel:} El funtor colapsa morfismos. Por ejemplo, sea $f = id_G$ y sea $g: G \to G$ un automorfismo interno dado por conjugación ($g(x) = yxy^{-1}$). En $Gr$, si el grupo no es abeliano, $f \neq g$. Pero al pasar al cociente, como $Ab$ es abeliano, la conjugación se vuelve trivial y ambos inducen exactamente el mismo morfismo (la identidad) en $G/[G,G]$.
+        \item \textbf{No es pleno:} Como analizamos antes, no todo morfismo entre abelianizados proviene de un morfismo entre los grupos originales. Por ejemplo, existe la identidad entre los abelianizados de $V_4$ y $Q_8$, pero no existe ningún morfismo $V_4 \to Q_8$ en $Gr$ que al abelianizar resulte en esa identidad.
+    \end{itemize}
+
+\end{enumerate}
+
+\begin{definition}
+    Un untor se dice \textit{exacto a izquierda} si preserva monomorfismos. Análogamente, se dice \textit{exacto a derecha} si preserva epimorfismos
+\end{definition}
+
+\begin{ejemplo}
+    Sean $A$ y $B$ dos $\mathbb{K}$-álgebras y sea $M$ un $A$-$B$-bimódulo. Podemos considerar el funtor $F = \operatorname{Hom}_A(M, -): {}_A Mod \longrightarrow {}_B Mod$. \\
+    
+    Dados $N_1, N_2 \in {}_A Mod$ y un morfismo $f: N_1 \to N_2$, como vimos el funtor induce un morfismo $F(f)(\alpha) = f \circ \alpha$. Esto se puede visualizar en el siguiente diagrama conmutativo:
+
+    \begin{center}
+        \begin{tikzpicture}
+            \node (m) at (0,0) {$M$};
+            \node (a) at (2,1.5) {$N_1$};
+            \node (b) at (2,-1.5) {$N_2$};
+            \node (c) at (1.25,0) {$\equiv$};
+
+            \draw[->] (m) --node[above left] {$\alpha$} (a);
+            \draw[->] (a) --node[right] {$f$} (b);
+            \draw[->] (m) --node[below left] {$f\circ \alpha$} (b);
+        \end{tikzpicture}
+    \end{center}
+
+    Veamos que este funtor preserva monomorfismos. Supongamos que $f$ es un monomorfismo en ${}_A Mod$. Queremos probar que $F(f)$ es un morfismo inyectivo.  \\
+    
+    Tomemos $\alpha, \beta \in \operatorname{Hom}_A(M, N_1)$ tales que $F(f)(\alpha) = F(f)(\beta)$. Por definición del funtor, esto significa que:
+    \begin{equation*}
+        f \circ \alpha = f \circ \beta
+    \end{equation*}
+    Como $f$ es un monomorfismo, es cancelable a izquierda. Por lo tanto, deducimos directamente que $\alpha = \beta$. Esto prueba que $F(f)$ es inyectivo y, en consecuencia, el funtor $\operatorname{Hom}_A(M,-)$ preserva monomorfismos (es decir, es exacto a izquierda).
+\end{ejemplo}
+
+\subsection{Equivalencias naturales}
+
+Hasta ahora hemos construido dos funtores $G = Hom_A(X,-)$ que va de ${}_A Mod$ en grupos abelianos y $F: {}_A Mod \to Ab$ tal que $F = X^* \otimes_A -$. Con $X^* = G(A) = Hom_A(X,A)$. \\
+
+Sabemos que para todo $Y \in {}_A Mod$ tenemos:
+
+\begin{center}
+        \begin{tikzpicture}
+            % Fila de funtores
+            \node (FY) at (0,1.2) {$F(Y)$};
+            \node (GY) at (4,1.2) {$G(Y)$};
+            
+            % Igualdades verticales
+            \node at (0, 0.6) {\rotatebox{90}{$=$}};
+            \node at (4, 0.6) {\rotatebox{90}{$=$}};
+
+            % Fila de objetos
+            \node (x) at (0,0) {$X^* \otimes_A Y$};
+            \node (i) at (4,0) {$\operatorname{Hom}_A(X,Y)$};
+            
+            % Fila de elementos
+            \node (p) at (0,-1) {$\phi \otimes y$};
+            \node (y) at (4,-1) {$(x \mapsto \phi(x) \cdot y)$};
+
+            % Flechas
+            \draw[->] (x) --node[above] {$\eta_Y$} (i);
+            \draw[|->] (p) -- (y);
+        \end{tikzpicture}
+\end{center}
+
+Dado $Y^\prime$ otro $A$-módulo y $f:Y \to Y^\prime$ un morfismo de $A$ módulos entonces podemos considerar el siguiente diagrama:
+
+\begin{center}
+    \begin{tikzpicture}
+        % Nodos
+        \node (TL) at (0,2) {$X^* \otimes_A Y$};
+        \node (TR) at (5,2) {$\operatorname{Hom}_A(X,Y)$};
+        \node (BL) at (0,0) {$X^* \otimes_A Y^\prime$};
+        \node (BR) at (5,0) {$\operatorname{Hom}_A(X,Y^\prime)$};
+
+        \node (eq) at (2.5,1) {$\equiv$};
+
+        % Flechas
+        \draw[->] (TL) --node[above] {$\eta_Y$} (TR);
+        \draw[->] (BL) --node[below] {$\eta_{Y^\prime}$} (BR);
+        \draw[->] (TL) --node[left] {$F(f) = id_{X^*} \otimes_A f$} (BL);
+        \draw[->] (TR) --node[right] {$f \circ - = G(f)$} (BR);
+    \end{tikzpicture}
+\end{center}
+
+Esto nos permite dar la siguiente definición:
+
+\begin{definition}
+    Dados dos funtores $F,G:\mathcal{C} \to \mathcal{D}$ una \textit{transformación natural} es $\eta:F \to G$ una colección de aplicaciones $(\eta_Y)_{Y \in \mathcal{C}_0}$ donde $\eta_Y \in Hom_{\mathcal{D}}(F(Y),G(Y))$ par cada $Y$ objeto de $\mathcal{C}$, y tales que para cada par de objetos $Y,Y^\prime$ en $\mathcal{C}$ y $f:Y \to Y^\prime$ morfismo, el diagrama:
+
+    \begin{center}
+    \begin{tikzpicture}
+        % Nodos
+        \node (TL) at (0,2) {$\mathcal{D}_0 \ni F(Y)$};
+        \node (TR) at (5,2) {$F(Y^\prime) \in \mathcal{D}_0$};
+        \node (BL) at (0,0) {$\mathcal{D}_0 \ni G(Y) $};
+        \node (BR) at (5,0) {$G(Y^\prime) \in \mathcal{D}_0$};
+
+        \node (eq) at (2.5,1) {$\equiv$};
+
+        % Flechas
+        \draw[->] (TL) --node[above] {$F(f)$} (TR);
+        \draw[->] (BL) --node[below] {$G(f)$} (BR);
+        \draw[->] (TL) --node[left] {$\eta_Y$} (BL);
+        \draw[->] (TR) --node[right] {$\eta_{Y^\prime}$} (BR);
+    \end{tikzpicture}
+\end{center}
+
+conmuta.
+\end{definition}
+
+\begin{ejemplo}
+    Un primer ejemplo clásico de transformación natural es el determinante. Dado $n \in \mathbb{N}$, consideremos la categoría de anillos conmutativos con unidad $CAnn_1$ y la categoría de grupos $Gr$. Tenemos los siguientes funtores:
+
+    \begin{itemize}
+        \item El funtor \textbf{Grupo Lineal General} $GL_n: Ann_1 \longrightarrow Gr$, que a cada anillo $A$ le asigna el grupo de matrices invertibles $n \times n$ con coeficientes en $A$. A cada morfismo de anillos $f: A \to B$ le asigna el morfismo de grupos $GL_n(f): GL_n(A) \to GL_n(B)$, el cual aplica $f$ entrada por entrada a la matriz.
+        
+        \item El funtor \textbf{Grupo de Unidades} $U: Ann_1 \longrightarrow Gr$, que a cada anillo $A$ le asigna su grupo de elementos invertibles $U(A)$ (que podemos pensar como $GL_1(A)$). A cada morfismo $f: A \to B$ le asigna su restricción a las unidades, $U(f): U(A) \to U(B)$.
+    \end{itemize}
+
+    El determinante define una transformación natural $\det: GL_n \to U$. Para cada anillo $A$, la componente en $A$ es el homomorfismo de grupos:
+
+    \begin{align*}
+        \det\nolimits_A: GL_n(A) &\longrightarrow U(A) \\
+        X &\longmapsto \det(X)
+    \end{align*}
+
+    Para ver que esto conforma una transformación natural, debemos verificar que para cualquier morfismo de anillos $f: A \to B$, el siguiente diagrama conmuta:
+
+    \begin{center}
+        \begin{tikzpicture}
+            \node (TL) at (0,2) {$GL_n(A)$};
+            \node (TR) at (4,2) {$GL_n(B)$};
+            \node (BL) at (0,0) {$U(A)$};
+            \node (BR) at (4,0) {$U(B)$};
+
+            \draw[->] (TL) --node[above] {$GL_n(f)$} (TR);
+            \draw[->] (BL) --node[below] {$U(f)$} (BR);
+            \draw[->] (TL) --node[left] {$\det_A$} (BL);
+            \draw[->] (TR) --node[right] {$\det_B$} (BR);
+        \end{tikzpicture}
+    \end{center}
+
+    Esto resulta cierto porque el determinante es un polinomio en las entradas de la matriz con coeficientes enteros. Como $f$ es un morfismo de anillos, preserva sumas y productos. Por lo tanto, calcular el determinante y luego aplicar $f$ arroja exactamente el mismo resultado que aplicar $f$ a las entradas de la matriz y luego calcular el determinante en $B$. En fórmulas, para toda matriz $X \in GL_n(A)$:
+    \begin{equation*}
+        U(f)(\det\nolimits_A(X)) = \det\nolimits_B(GL_n(f)(X))
+    \end{equation*}
+    Luego, el diagrama conmuta y $\det$ es una transformación natural.
+\end{ejemplo}
+
+\begin{definition}
+    Dados dos funtores $F,G:\mathcal{C} \to \mathcal{D}$, una transformación natural $\eta:F \to G$ es una \textit{equivalencia natural} si para cada objeto $X$ en $\mathcal{C}_0$ tenemos que $\eta_X:F(X) \to G(X)$ es un isomorfismo en $\mathcal{D}$.
+\end{definition}
+
+Un ejemplo sencillo de esto sería tomar ambas categorías como ${}_\cuerpo \mathbb{V}$ de dimensión finita, y considerar $F = Id$ y $G = -^{**}$ -tomar doble dual-. Entonces $\eta_V:V = F(V)\to V^{**} = G(V)$ es el isomorfismo conocido de álgebra lineal. \\
+
+En este caso decimos que $F$ y $G$ son naturalmente equivalentes. \\
+
+\begin{definition}
+    Un funtos $F:\mathcal{C} \to \mathcal{D}$ es una \textit{equivalencia de categorías} si existe $G:\mathcal{D} \to \mathcal{C}$ tal que $F \circ G \simeq Id_{\mathcal{C}}$ y $G \circ F \simeq Id_{\mathcal{D}}$ donde $\simeq$ en este caso es ser naturalmente equivalentes.
+\end{definition}
+
+\begin{theorem}
+    Sean $\mathcal{C}$, $\mathcal{D}$ categorís y $F:\mathcal{C} \to \mathcal{D}$ funtor, $F$ es una equivalencia categórica si:
+
+    \begin{enumerate}
+        \item Es plenamente fiel.
+        \item Es \textit{escencialmente sobreyectivo}. Esto es que para todo objeto en $\mathcal{D}$ existe $X$ objeto en $\mathcal{C}$ tal que $F(X) \simeq Z$.
+    \end{enumerate}
+\end{theorem}
+
+\begin{proof}
+    Supongamos que $F$ es una equivalencia de categorías. Entonces existe un funtor $G: \mathcal{D} \to \mathcal{C}$ y dos equivalencias naturales $\eta: 1_{\mathcal{C}} \to GF$ y $\varepsilon: FG \to 1_{\mathcal{D}}$.\\
+    
+    Para ver que es \textit{esencialmente sobreyectivo}, tomemos cualquier $Y \in \mathcal{D}$. Evaluando el isomorfismo natural $\varepsilon$ en $Y$, obtenemos un isomorfismo $\varepsilon_Y: F(G(Y)) \xrightarrow{\sim} Y$. Basta tomar $X = G(Y) \in \mathcal{C}$, y tenemos $F(X) \simeq Y$.\\
+    
+    Para ver que es \textit{plenamente fiel}, debemos mostrar que la aplicación $F_{X,X^\prime}: \operatorname{Hom}_{\mathcal{C}}(X, X^\prime) \to \operatorname{Hom}_{\mathcal{D}}(F(X), F(X^\prime))$ dada por $f \mapsto F(f)$ es biyectiva.  \\
+
+    Notemos que para cualquier $f: X \to X^\prime$, la naturalidad de $\eta$ implica que:
+
+    \begin{equation*}
+        GF(f) \circ \eta_X = \eta_{X^\prime} \circ f \implies f = \eta_{X^\prime}^{-1} \circ GF(f) \circ \eta_X
+    \end{equation*}
+
+    De aquí deducimos que si $F(f) = F(g)$, entonces $GF(f) = GF(g)$, por lo que $f = g$ (es decir, $F$ es fiel). Por simetría, $G$ también es fiel. Para ver que $F$ es pleno, sea $h: F(X) \to F(X^\prime)$ un morfismo en $\mathcal{D}$. Definimos $f = \eta_{X^\prime}^{-1} \circ G(h) \circ \eta_X$. Por construcción $GF(f) = G(h)$. Como $G$ es fiel, $F(f) = h$. Luego, $F$ es pleno.\\
+
+
+    Si ahora supongemos que es plenamente fiel y escencialmente sobreyectivo, por hipótesis, para cada $Y \in \mathcal{D}$ existe al menos un objeto en $\mathcal{C}$ cuya imagen por $F$ es isomorfa a $Y$. Usando el Axioma de Elección, para cada $Y \in \mathcal{D}$, elegimos un objeto $X_Y \in \mathcal{C}$ y un isomorfismo específico $\varepsilon_Y: F(X_Y) \xrightarrow{\sim} Y$.  \\
+    
+    Definimos el funtor inverso $G: \mathcal{D} \to \mathcal{C}$ en objetos como $G(Y) = X_Y$. \\
+
+    Para definir $G$ en morfismos, sea $f: Y \to Y^\prime$ en $\mathcal{D}$. Consideremos la composición en $\mathcal{D}$:
+    \begin{equation*}
+        \varepsilon_{Y^\prime}^{-1} \circ f \circ \varepsilon_Y: F(G(Y)) \longrightarrow F(G(Y^\prime))
+    \end{equation*}
+    Como $F$ es \textit{plenamente fiel}, existe un único morfismo en $\mathcal{C}$, al que llamaremos $G(f): G(Y) \to G(Y^\prime)$, tal que:
+    \begin{equation*}
+        F(G(f)) = \varepsilon_{Y^\prime}^{-1} \circ f \circ \varepsilon_Y
+    \end{equation*}
+    Despejando $f$, esto es equivalente a pedir que el siguiente diagrama conmute, lo que automáticamente hace que $\varepsilon: FG \to 1_{\mathcal{D}}$ sea una transformación natural (y como cada $\varepsilon_Y$ es isomorfismo, es una equivalencia natural):
+    
+    \begin{center}
+        \begin{tikzpicture}
+            \node (TL) at (0,2) {$F(G(Y))$};
+            \node (TR) at (4,2) {$F(G(Y^\prime))$};
+            \node (BL) at (0,0) {$Y$};
+            \node (BR) at (4,0) {$Y^\prime$};
+
+            \draw[->] (TL) --node[above] {$F(G(f))$} (TR);
+            \draw[->] (BL) --node[below] {$f$} (BR);
+            \draw[->] (TL) --node[left] {$\varepsilon_Y$} (BL);
+            \draw[->] (TR) --node[right] {$\varepsilon_{Y^\prime}$} (BR);
+        \end{tikzpicture}
+    \end{center}
+
+    Verifiquemos que $G$ es un funtor. Para la identidad, $F(G(id_Y)) = \varepsilon_Y^{-1} \circ id_Y \circ \varepsilon_Y = id_{F(G(Y))} = F(id_{G(Y)})$. Como $F$ es fiel, deducimos $G(id_Y) = id_{G(Y)}$. 
+    Para la composición, dadas $f: Y \to Y^\prime$ y $g: Y^\prime \to Y^{\prime\prime}$:
+    \begin{align*}
+        F(G(g \circ f)) &= \varepsilon_{Y^{\prime\prime}}^{-1} \circ (g \circ f) \circ \varepsilon_Y \\
+        &= (\varepsilon_{Y^{\prime\prime}}^{-1} \circ g \circ \varepsilon_{Y^\prime}) \circ (\varepsilon_{Y^\prime}^{-1} \circ f \circ \varepsilon_Y) \\
+        &= F(G(g)) \circ F(G(f)) \\
+        &= F(G(g) \circ G(f))
+    \end{align*}
+    Nuevamente, como $F$ es fiel, $G(g \circ f) = G(g) \circ G(f)$. Luego $G$ es un funtor. \\
+
+    Por último, falta construir el isomorfismo natural $\eta: 1_{\mathcal{C}} \to GF$. Sea $X \in \mathcal{C}$, y llamemos $Y = F(X)$. Por definición, $G(F(X)) = G(Y) = X_Y$. El isomorfismo que elegimos al principio nos da $\varepsilon_{F(X)}: F(G(F(X))) \xrightarrow{\sim} F(X)$.
+    Como $F$ es plenamente fiel, existe un único isomorfismo en $\mathcal{C}$ (ya que $F$ refleja isomorfismos):
+    \begin{equation*}
+        \eta_X: X \xrightarrow{\sim} G(F(X)) \quad \text{tal que} \quad F(\eta_X) = \varepsilon_{F(X)}^{-1}
+    \end{equation*}
+    Para ver que $\eta$ es natural, tomemos un morfismo $h: X \to X^\prime$ en $\mathcal{C}$. Queremos probar que $G(F(h)) \circ \eta_X = \eta_{X^\prime} \circ h$. Como $F$ es fiel, basta probarlo luego de aplicar $F$:
+    \begin{align*}
+        F(G(F(h)) \circ \eta_X) &= F(G(F(h))) \circ F(\eta_X) \\
+        &= F(G(F(h))) \circ \varepsilon_{F(X)}^{-1}
+    \end{align*}
+    Pero por la naturalidad de $\varepsilon$ aplicada a la flecha $F(h): F(X) \to F(X^\prime)$, sabemos que:
+    \begin{equation*}
+        \varepsilon_{F(X^\prime)} \circ F(G(F(h))) = F(h) \circ \varepsilon_{F(X)} \implies F(G(F(h))) \circ \varepsilon_{F(X)}^{-1} = \varepsilon_{F(X^\prime)}^{-1} \circ F(h)
+    \end{equation*}
+    Reemplazando $\varepsilon_{F(X^\prime)}^{-1} = F(\eta_{X^\prime})$, obtenemos:
+    \begin{equation*}
+        F(G(F(h)) \circ \eta_X) = F(\eta_{X^\prime}) \circ F(h) = F(\eta_{X^\prime} \circ h)
+    \end{equation*}
+    Por fidelidad de $F$, se sigue que $G(F(h)) \circ \eta_X = \eta_{X^\prime} \circ h$, por lo que el cuadrado conmuta y $\eta$ es un isomorfismo natural. Concluimos que $\mathcal{C}$ y $\mathcal{D}$ son equivalentes.
+\end{proof}
+
+Un primer resultado donde podemos usar esto es el siguiente:
+
+\begin{ejemplo}
+    Dada una categoría $\mathcal{C}$ definimos su esqueleto $SK(\mathcal{C})$ como la sub-categoría plena en la cual se elige un obeto por cada clase de isomorfismo. \\
+
+    El funtor inclusión es un funtor plenamente fiel, pues se elige la categoría plena y además es escencialmente sobreyectivo por la elección de los objetos. \\
+
+    Un sub-ejemplo del anterior sería elegir en $Vect_\cuerpo$ como representante de la clase de isomorfismo al conjunto $\conjunto{\cuerpo^n}_{n \in \nat_0}$. 
+\end{ejemplo}
+
+\subsection{Objetos incial y final}
+
+\begin{definition}
+    Un objeto $t$ se dice \textit{final} si para todo otro objeto existe un único morfismo que llega a $t$. \\
+
+    Decimos que $s$ es \textit{inicial} si por el contrario existe un único morfismo que sale de $s$ para todo otro objeto.
+\end{definition}
+
+\begin{ejemplo}
+    En la categoría de espacios vectoriales el $\conjunto{0}$ es un objeto inicial y final. \\
+
+    Si $A$ es un anillo con unidad y tenemos $\mathcal{C} = {}_A Mod$ entonces $\conjunto{0}$ es también inicial y final. \\
+
+
+    En la categoría $Set$, todo conjunto con un elemento es final y el conjunto vacío es inicial. \\
+
+    En la categoría $Top$, el objeto trivial es final y el vacío es inicial.
+\end{ejemplo}
+
+
+\begin{definition}
+    Un \textit{objeto nulo} en una categoría $\mathcal{C}$ es un objeto al que notaremos $0$ que resulta a la vez final e inicial.
+\end{definition}
+
+\begin{observacion}
+    Si la categoría posee objeto nulo, podemos definir para todo par de objetos $X,Y$ podemos definir un morfismo nulo entre ellos, que es aquel tal que el siguiente diagrama conmuta:
+
+    \begin{center}
+        \begin{tikzpicture}
+            \node (x) at (0,0) {$X$};
+            \node (y) at (4,0) {$Y$};
+            \node (0) at (2,-1) {$0$};
+
+            \draw[->] (x) -- node[left] {$\exists !$} (0);
+            \draw[->] (0) -- node[right] {$\exists !$} (y);
+            \draw[->] (x) -- node[above] {$f$} (y);
+        \end{tikzpicture}
+    \end{center}
+
+    
+\end{observacion}
+
+\subsection{Co-cosas}
+
+\begin{definition}
+    Sea $\flia{X}$ familía de objetos de una categoría, el coproducto de esa familia es, de existir, un objeto $X$ tal que viene provisto de morfismos $\alpha_i: X_i \to X$ y tales que si $T$ es otro objeto con morfismos $\beta_i:X_i \to T$, existe un único $\beta:X \to T$ tal que el siguiente diagrama conmutapara todos los $i \in I$:
+
+  
+    \begin{center}
+        \begin{tikzpicture}
+            \node (i) at (0,0) {$X_i$};
+            \node  (x) at (2,0) {$X$};
+            \node (y) at (0,-2) {$T$};
+
+       
+            \draw[->] (i) --node[above] {$\alpha_i$} (x);
+            \draw[->] (i) -- node[left] {$\beta_i$} (y);
+            \draw[->,dashed] (x) --node[below] {$\exists ! \beta$} (y);
+        \end{tikzpicture}
+    \end{center}
+
+    Notamos al coproducto como $\bigoplus_{i \in I} X_i$ o $\coprod_{i \in I} X_i$.
+\end{definition}
+
+Una primera observación es que, de existir el coproducto, es único, esto pues se debe respetar el siguiente diagrama:
+
+\begin{center}
+    \begin{tikzpicture}
+        \node (A) at (0,2) {$A$};
+        \node (B) at (4,2) {$B$};
+        \node (X) at (2,0.5) {$X$};
+        \node (Y) at (2,-2) {$Y$};
+
+        % Inyecciones a X
+        \draw[->] (A) --node[above right] {$i_1$} (X);
+        \draw[->] (B) --node[above left] {$i_2$} (X);
+
+        % Inyecciones a Y
+        \draw[->, bend right=30] (A) to node[below left] {$j_1$} (Y);
+        \draw[->, bend left=30] (B) to node[below right] {$j_2$} (Y);
+
+        % Morfismos únicos
+        \draw[->, dashed] (X) to[bend right=20] node[left] {$\exists ! f$} (Y);
+        \draw[->, dashed] (Y) to[bend right=20] node[right] {$\exists ! g$} (X);
+    \end{tikzpicture}
+\end{center}
+
+Y en particular como $g \circ f$ y $f \circ g$ deben ser únicos tales que van de $X \to X$ y de $Y \to Y$ y que hacen conmutar cada parte del diagrama, y como las identidades cumplen esto tenemos que debe ser $f \circ g = Id_X, g \circ f = Id_Y$. De este modo $X \simeq Y$ en $\mathcal{C}$. \\
+
+
+\end{document} 
+
+\section{Cosas como colimites}
+
+Consideremos lassiguientes definiciones\footnote{Para los que no estuvieron en la clase, la definición dada por Andrea con Posets en lugar de grafos dirigidos no permitía incluir el Coegalizador como un Colimite (o como mínimo no encontramos una manera razonable de hacerlo de ese modo).}:
+
+\begin{definition}
+    Sea $I$ un grafo dirigido y $(X_i)_{i \in I}$ una familia de objetos indexadas por $I$, donde notamos $i \leq j$ si existe un camino del vértice $i$ al vértice $j$. Si para todo par $i \leq j$ existe un morfismo:
+
+    \begin{equation*}
+        f_{i\leq j}: X_i \to X_j
+    \end{equation*}
+
+    decimos que esto es un sistema inductivo si además, para toda terna $i \leq j \leq k$ es:
+
+    \begin{center}
+        \begin{tikzpicture}
+            \node (i) at (0,0) {$X_i$};
+            \node (j) at (2,0) {$X_j$};
+            \node (k) at (4,0) {$X_k$};
+            \node (e) at (2, -0.5) {$\equiv$};
+
+
+        \draw[->] (i) -- node[above] {$f_{i \leq j}$} (j);
+        \draw[->] (j) -- node[above] {$f_{j \leq k}$} (k);
+        \draw[->] (i) to[bend right=45] node[below] {$f_{i \leq k}$} (k);
+        \end{tikzpicture}
+    \end{center}
+
+    El diagrama conmuta.
+\end{definition}
+
+\begin{definition}
+    Sea $((X_i)_{i \in I}, f_{i\leq j})$ un sistema inductivo, llamamos \textit{límite directo o colímite} de la familia a un par $(X, (f_i:X_i \to X))$ tal que:
+
+    \begin{enumerate}
+        \item Para todos $i \leq j$ es $f_j \circ f_{i \leq j} = f_i$.
+        \item Para todo $Y$ objeto provisto de morfismos $g_i:X_i \to X$ que cumple $g_i = g_j \circ f_{i \leq j}$ existe un único $g$ tal que $g_i = g \circ f_i$ para todo $i \in I$.
+    \end{enumerate}
+    
+    
+    Equivalentemente decimos que para cada elección $i \leq j$ de índices, cada bloque del siguiente diagrama conmuta :
+
+    \begin{center}
+        \begin{tikzpicture}
+            \node (i) at (0,1.5) {$X_i$};
+            \node (j) at (0,-1.5) {$X_j$};
+            \node  (x) at (2,0) {$X$};
+            \node (y) at (4,0) {$Y$};
+
+            \draw[->] (i) --node[left] {$f_{i\leq j}$} (j);
+            \draw[->] (i) --node[above] {$f_i$} (x);
+            \draw[->] (j) --node[above] {$f_j$} (x);
+            \draw[->] (j) to[bend right=45] node[below] {$g_j$} (y);
+            \draw[->] (i) to[bend left=45] node[below] {$g_i$} (y);
+            \draw[->,dashed] (x) --node[above] {$\exists ! g$} (y);
+        \end{tikzpicture}
+    \end{center}
+\end{definition}
+
+Veamos que algunos objetos -si es que existen- son en realidad colimites, es decir supondremos que los objetos buscados y el colímite existen y veremos que coinciden bajo esas condiciones al considerar las familias adecuadas: \\
+
+\textbf{Objeto inicial:} Un objeto inicial $X$ cumple que para todo otro objeto $Y$ existe un único morfismo de $X \to Y$. Si consideramos el grafo vacío y la familia vacia indexada por el, trivialmente se trata de un sistema inductivo. \\
+
+Si esta familia posee colimite, digamos $Z$ entonces $Z$ cumple que para todo objeto existe un único morfismo que sale de $Z$ y hace conmutar el diagrama que solo posee al $Z$. Es decir $Z$ es inicial. \\
+
+\textbf{Coproducto:} Sea una familia $(X_i)_{i\in I}$ de objetos sin flechas entre ellos -es decir indexamos por el grafo dirigido $I$ el cual no posee flechas-, queremos su coproducto. Veamos que el colímite de la familia cumple trivialmente esto: Efectivamente para cada $i$ y para todo otro $Z$ objeto con morfismo $g_i:X_i \to Z$, por la propiedad universal del colímite existe un único morfismo $g:X \to Z$ tal que:
+
+
+    \begin{center}
+        \begin{tikzpicture}
+            \node (i) at (0,0) {$X_i$};
+            \node  (x) at (2,0) {$X$};
+            \node (y) at (0,-2) {$Z$};
+
+       
+            \draw[->] (i) --node[above] {$f_i$} (x);
+            \draw[->] (i) -- node[left] {$g_i$} (y);
+            \draw[->,dashed] (x) --node[below] {$\exists ! g$} (y);
+        \end{tikzpicture}
+    \end{center}
+
+
+Como antes trivialmente nuestro conjunto $I$ es un grafo dirigido, más aún es un poset -el que no tiene relaciones más que las reflexivas- y el conjunto resulta inductivo por no tener flechas etre los objetos. \\
+
+
+\textbf{Push-out:} Sean $X,Y,Z$ nuestra familia de objetos con flechas $g:X \to Z, f:X \to Y$ que definen nuestro grafo dirigido. Como no hay composiciones el conjunto es trivialmente inductivo. \\
+
+
+De existir el colímite, cumple que cada bloque del siguiente diagrama conmuta:
+ 
+\begin{center}
+    \begin{tikzpicture}
+        \node (x) at (0,2) {$X$};
+        \node (y) at (2,2) {$Y$};
+        \node (z) at (0,0) {$Z$};
+        \node (p) at (2,0) {$P$};
+        \node (t) at (4,-2) {$T$};
+
+        \draw[->] (x) --node[above] {$f$} (y);
+        \draw[->] (x) --node[left] {$g$} (z);
+        \draw[->] (z) --node[below] {$\alpha$} (p);
+        \draw[->] (y) --node[right] {$\beta$} (p);
+
+         \draw[->] (z) to[bend right=45] node[below] {$\alpha^\prime$} (t);
+        \draw[->] (y) to[bend left=45] node[right] {$\beta^\prime$} (t);
+
+        \draw[->,dashed] (p) --node[above] {$\exists ! g$} (t);
+    \end{tikzpicture}
+\end{center}
+
+Y esto es el push-out de $(X,Y,Z,f,g)$, pues cumple exactamente la misma propiedad universal. \\
+
+\textbf{Coegalizador:} Dados dos morfismos paralelos $f, g: X \to Y$, el coegalizador se puede construir como el colímite de un diagrama con dos objetos ($X$ e $Y$) y dos flechas paralelas $f, g: X \to Y$. \\ 
+
+
+El colímite consiste en un objeto $Q$ y un morfismo $q: Y \to Q$ (con $q \circ f = q \circ g$ cuando lo completamos a $X$) tal que, para cualquier otro objeto $T$ y morfismo $h: Y \to T$ que haga a $h \circ f$ y $h \circ g$ iguales, existe un único morfismo $u: Q \to T$ que hace conmutar el diagrama:
+
+\begin{center}
+    \begin{tikzpicture}
+        \node (x) at (0,1) {$X$};
+        \node (y) at (2,1) {$Y$};
+        \node (q) at (4,1) {$Q$};
+        \node (t) at (2,-1) {$T$};
+
+        \draw[->] (x) to[bend left=30] node[above] {$f$} (y);
+        \draw[->] (x) to[bend right=30] node[below] {$g$} (y);
+        \draw[->] (y) -- node[above] {$q$} (q);
+        \draw[->] (y) -- node[right] {$h$} (t);
+        \draw[->, dashed] (q) -- node[right] {$\exists ! u$} (t);
+        \draw[->] (x) -- node[left] {$k$} (t);
+    \end{tikzpicture}
+\end{center}
+
+
+satisfaciendo $h = u \circ q$. \\
+
+Notemos que por como definimos el colímite, si $k$ es un morfismo de $X$ a $Z$, como $k$ debe satisfacer propiedad de que el diagrama de la izquierda conmuta, pues el camino de $h \circ f = k$ por ser un sistema inductivo, entonces:
+
+\begin{equation*}
+    k = h \circ f = u \circ q \circ f
+\end{equation*}
+
+Por conmutatividad del diagrama derecho, y recordemos que nuestra flecha de $X \to Q$ era exactamente $q \circ f$, cumpliendo la definición. \\
+
+\textbf{Coker:} Si los objetos de la categoría poseen $0$, entonces el coker es el coegalizador tomando $g$ el morfismo $0$ de $X$ a $Y$.  
+
+\section{Complejos de cadena y Homotopías}
+
+Sea $(C,d)$ un complejo de cadenas, veamos que este es split exacto si y solo si existe una homotopía de cadenas $h_\bullet:C_\bullet \to C_{\bullet+1}$ tal que:
+
+\begin{equation*}
+    d_{n+1} h_{n} + h_{n-1} d_n = Id_{C_n}  
+\end{equation*}
+
+para todo $n$. \\
+
+Supongamos que existe tal morfismo $h$ que cumple lo de arriba. Sea $x \in Z_n$ es decir, tal que $d_n x = 0$, si evaluamos $x$ en la ecuación de arriba es:
+
+\begin{equation*}
+    x = Id_{C_n}(x) = d_{n+1}(h_n x) + h_{n-1}(d_nx) = d_{n+1} \circ h_n (x)
+\end{equation*}
+
+Como $x = d_{n+1}(h_n(x))$ entonces es $x \in B_n$. Como todo complejo cumple la otra inclusión, tenemos que $Z_n = B_n$. Esto nos dice que el complejo es exacto. \\
+
+Para ver que $d \circ h \circ d = d$ -es split- tenemos que:
+
+\begin{equation*}
+    d_n = d_n \circ Id_{C_n} = d_n \circ (d_{n+1} h_n + h_{n-1} d_n) = 0  + d_{n} h_{n-1} d_n
+\end{equation*}
+
+Si ahora suponemos que el complejo es split exacto, y por ende que existe $h_\bullet:C_\bullet \to C_{\bullet +1}$ tal que $d_nh_{n-1}d_n = d_n$, necesitamos fabricar la homotopía. Veamos como hacerlo a partir de $h$. \\
+
+Sea $z \in Ker(d_n) = Z_n$ entonces $z \in B_n = Im(d_{n+1})$ por exactitud. De modo que existe $y \in C_{n+1}$ tal que $d_{n+1} (y) = z$. Luego:
+
+\begin{equation*}
+    d_{n+1} h_n (z) = d_{n+1} h_n d_{n+1} (y) = d_{n+1}(y) = z
+\end{equation*}
+
+Esto nos dice que $d_{n+1}h_n|_{Z_n} = Id_{Z_n}$. \\
+
+Si ahora $x \in C_n$ es arbitrario, podemos considerar $w = x - h_{n-1} d_n x$ y aplicando $d_n$:
+
+\begin{equation*}
+    d_n w = d_n(x) - d_n h_{n-1} d_n(x) = d_n x - d_n x = 0
+\end{equation*}
+
+De modo que $w$ está en el núcleo de $d_n$. Con esto, tenemos que $d_{n+1} h_n (w) = w$, o lo qu ees o mismo:
+
+\begin{equation*}
+    d_{n+1} h_n (x - h_{n-1} d_n x) = x - h_{n-1} d_n x
+\end{equation*}
+
+Si distribuimos y despejamos a $x$, tenemos que:
+
+\begin{equation*}
+    x = d_{n+1} h_n x + h_{n-1} d_n x - d_{n+1} h_n h_{n-1} d_n x
+\end{equation*}
+
+Necesitamos una ecuación edl tipo $d_{n+1} s_n + s_{n-1} d_n = \text{id}$. Si ponemos:
+
+\begin{equation*}
+    s_n = h_n - d_{n+2} h_{n+1} h_n
+\end{equation*}
+
+Nos queda:
+
+\begin{align*}
+    & d_{n+1} s_n = d_{n+1} (h_n - d_{n+2} h_{n+1} h_n) 
+    \\
+    & = d_{n+1} h_n - d_{n+1} d_{n+2} h_{n+1} h_n = d_{n+1} h_n - 0 = d_{n+1} h_n \\
+    & s_{n-1} d_n = (h_{n-1} - d_{n+1} h_n h_{n-1}) d_n = h_{n-1} d_n - d_{n+1} h_n h_{n-1} d_n
+\end{align*}
+
+Sumando ambos términos es:
+
+\begin{equation*}
+    d_{n+1} s_n + s_{n-1} d_n = d_{n+1} h_n + h_{n-1} d_n - d_{n+1} h_n h_{n-1} d_n = x
+\end{equation*}
+
+Y como $x$ era arbitrario esto nos dice que $ds + sd = Id$.
+
+
+
